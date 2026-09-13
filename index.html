@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Scan Philippine Lotto tickets, compare your numbers with published PCSO results, and explore history-inspired number suggestions for entertainment.">
+  <title>LottoLens PH — Scan & Check Philippine Lotto Tickets</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <!-- After AdSense approval, paste your official AdSense <script> tag here. Do not modify Google's code. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="LottoLens PH home">
+      <span class="brand-mark">LL</span><span>LottoLens <b>PH</b></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#scan">Scan</a><a href="#results">Results</a><a href="#suggest">Number Lab</a><a href="methodology.html">Methodology</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-copy">
+        <span class="eyebrow">PHILIPPINE LOTTO TICKET CHECKER</span>
+        <h1>Photo in. <span>Matched numbers out.</span></h1>
+        <p>Take a photo of a ticket, review what the OCR found, then compare each play line against published PCSO Lotto results.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#scan">Scan a ticket</a>
+          <a class="button ghost" href="#results">See latest results</a>
+        </div>
+        <p class="fineprint">Independent informational tool. Not affiliated with or endorsed by PCSO. Always verify winning tickets through official PCSO channels or authorized outlets.</p>
+      </div>
+      <div class="hero-card" aria-hidden="true">
+        <div class="ticket-demo">
+          <div class="ticket-head"><span>LOTTO 6/45</span><span>DEMO</span></div>
+          <div class="ticket-row"><span>04</span><span>11</span><span>16</span><span>26</span><span>35</span><span>38</span></div>
+          <div class="scan-line"></div>
+          <div class="match-label">4 numbers matched</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Key features">
+      <div><strong>On-device OCR</strong><span>Ticket photos are processed in your browser.</span></div>
+      <div><strong>Official-source data</strong><span>Results updater targets PCSO LottoMatik.</span></div>
+      <div><strong>No prediction claims</strong><span>History-inspired picks do not improve draw odds.</span></div>
+    </section>
+
+    <section id="scan" class="section panel-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">TICKET SCANNER</span><h2>Scan, review, then check.</h2></div>
+        <p>OCR can misread print, folds, glare, or faded thermal paper. We make every detected number editable before checking.</p>
+      </div>
+      <div class="scanner-grid">
+        <div class="card upload-card">
+          <label class="dropzone" for="ticketPhoto">
+            <input id="ticketPhoto" type="file" accept="image/*" capture="environment">
+            <span class="camera-icon">◎</span>
+            <strong>Take or choose a ticket photo</strong>
+            <small>Best results: flat ticket, bright light, fill the frame.</small>
+          </label>
+          <img id="preview" class="preview hidden" alt="Ticket preview">
+          <div id="ocrStatus" class="status hidden" role="status"></div>
+          <details id="rawOcrWrap" class="raw-ocr hidden"><summary>View OCR text</summary><pre id="rawOcr"></pre></details>
+        </div>
+
+        <div class="card editor-card">
+          <div class="form-row two">
+            <label>Game<select id="scanGame"></select></label>
+            <label>Draw<select id="drawSelect"></select></label>
+          </div>
+          <div class="editor-head"><h3>Your play lines</h3><button id="addLine" class="text-button" type="button">+ Add line</button></div>
+          <div id="ticketLines" class="ticket-lines"></div>
+          <div class="check-actions">
+            <button id="checkTicket" class="button primary wide" type="button">Check these numbers</button>
+          </div>
+          <div id="checkResults" class="check-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="ad-slot" aria-label="Advertisement placeholder">
+      <span>Advertisement</span>
+      <p>AdSense slot — activate only after your site is approved.</p>
+    </aside>
+
+    <section id="results" class="section">
+      <div class="section-heading">
+        <div><span class="eyebrow">PUBLISHED RESULTS</span><h2>Latest six-number draws</h2></div>
+        <p id="dataFreshness">Loading result data…</p>
+      </div>
+      <div id="resultsGrid" class="results-grid"></div>
+      <p class="source-note">Source link: <a href="https://lottomatik.pcso.gov.ph/lotto-results" rel="noopener" target="_blank">PCSO LottoMatik results</a>. If this site and PCSO disagree, use PCSO as the authority.</p>
+    </section>
+
+    <section id="suggest" class="section lab-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">NUMBER LAB</span><h2>History-inspired suggestions.</h2></div>
+        <p>This is an entertainment generator, not a forecasting system. In a fair lottery, past draws do not make a number more likely next time.</p>
+      </div>
+      <div class="lab-grid">
+        <div class="card lab-controls">
+          <label>Game<select id="suggestGame"></select></label>
+          <label>Style<select id="suggestMode"><option value="history">History-inspired</option><option value="balanced">Balanced random</option><option value="uniform">Pure random</option></select></label>
+          <button id="generatePicks" class="button primary wide" type="button">Generate 5 suggestions</button>
+          <p id="historyCount" class="fineprint"></p>
+        </div>
+        <div class="card suggestions-card">
+          <div id="suggestions" class="suggestions"></div>
+          <div class="lab-explain"><strong>How “history-inspired” works</strong><p>It starts mostly random, then applies a small descriptive weight to numbers seen more often in the stored draw history. The weighting is intentionally weak because frequency is not predictive.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section content-grid">
+      <article class="content-card"><h3>What counts as a match?</h3><p>For the 6-number Lotto games supported here, the checker compares the six numbers on each play line with the six published draw numbers. Order does not matter. An apparent 3+ match is flagged for official verification; a 6/6 match is flagged as a jackpot-combination match.</p></article>
+      <article class="content-card"><h3>Why we do not say “guaranteed winner”</h3><p>A ticket photo can be misread, result feeds can be delayed, and prize eligibility depends on a valid original ticket and official validation. Treat this site as a convenience layer, not a claims counter.</p></article>
+      <article class="content-card"><h3>Privacy by design</h3><p>The browser performs OCR locally. This static site has no application server receiving your ticket image. If you later add analytics or advertising, disclose those services clearly in your privacy policy.</p></article>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>LottoLens PH</strong><p>Independent Philippine Lotto checking and statistics tool.</p></div>
+    <div class="footer-links"><a href="about.html">About</a><a href="methodology.html">Methodology</a><a href="privacy.html">Privacy</a><a href="responsible-play.html">Responsible Play</a></div>
+    <p class="footer-legal">18+ only. Play responsibly. LottoLens PH does not sell lottery tickets, accept wagers, or guarantee winnings. PCSO names and game names are used only to identify public lottery results.</p>
+  </footer>
+</body>
+</html>
