@@ -1,19 +1,19 @@
 {
   "source": "https://lottomatik.pcso.gov.ph/lotto-results",
   "source_label": "Official PCSO LottoMatik",
-  "updated_at": "2026-09-19T01:50:38+08:00",
+  "updated_at": "2026-09-20T01:24:10+08:00",
   "status": "live-updated",
   "games": {
     "6/42": {
       "name": "Lotto 6/42",
-      "date": "2026-09-17",
+      "date": "2026-09-19",
       "numbers": [
         8,
-        31,
-        32,
-        19,
-        24,
-        6
+        27,
+        6,
+        25,
+        13,
+        22
       ],
       "jackpot": "₱45,831,802.36",
       "winners": 0
@@ -48,16 +48,16 @@
     },
     "6/55": {
       "name": "Grand Lotto 6/55",
-      "date": "2026-09-16",
+      "date": "2026-09-19",
       "numbers": [
-        4,
-        7,
-        8,
-        54,
-        51,
-        31
+        6,
+        5,
+        12,
+        17,
+        47,
+        3
       ],
-      "jackpot": "₱202,471,705.43",
+      "jackpot": "₱209,009,123.45",
       "winners": 0
     },
     "6/58": {
