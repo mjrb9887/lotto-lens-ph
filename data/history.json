@@ -1,9 +1,20 @@
 {
   "source": "Official PCSO LottoMatik public results",
-  "updated_at": "2026-10-06T05:43:02+08:00",
+  "updated_at": "2026-10-07T03:47:17+08:00",
   "note": "Starter history only. The scheduled updater appends new official draws. Import a fuller verified history for stronger descriptive statistics.",
   "games": {
     "6/42": [
+      {
+        "date": "2026-10-06",
+        "numbers": [
+          7,
+          35,
+          41,
+          37,
+          8,
+          11
+        ]
+      },
       {
         "date": "2026-10-03",
         "numbers": [
@@ -328,6 +339,17 @@
     ],
     "6/49": [
       {
+        "date": "2026-10-06",
+        "numbers": [
+          38,
+          10,
+          3,
+          39,
+          7,
+          13
+        ]
+      },
+      {
         "date": "2026-10-04",
         "numbers": [
           6,
@@ -639,6 +661,17 @@
       }
     ],
     "6/58": [
+      {
+        "date": "2026-10-06",
+        "numbers": [
+          26,
+          18,
+          44,
+          43,
+          49,
+          57
+        ]
+      },
       {
         "date": "2026-10-04",
         "numbers": [
