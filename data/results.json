@@ -1,21 +1,21 @@
 {
   "source": "https://lottomatik.pcso.gov.ph/lotto-results",
   "source_label": "Official PCSO LottoMatik",
-  "updated_at": "2026-10-08T04:09:11+08:00",
+  "updated_at": "2026-10-09T04:04:36+08:00",
   "status": "live-updated",
   "games": {
     "6/42": {
       "name": "Lotto 6/42",
-      "date": "2026-10-06",
+      "date": "2026-10-08",
       "numbers": [
-        7,
-        35,
-        41,
-        37,
-        8,
+        19,
+        1,
+        20,
+        39,
+        23,
         11
       ],
-      "jackpot": "₱75,904,990.52",
+      "jackpot": "₱85,479,191.72",
       "winners": 0
     },
     "6/45": {
@@ -34,16 +34,16 @@
     },
     "6/49": {
       "name": "Super Lotto 6/49",
-      "date": "2026-10-06",
+      "date": "2026-10-08",
       "numbers": [
-        38,
-        10,
-        3,
-        39,
-        7,
-        13
+        41,
+        19,
+        4,
+        1,
+        12,
+        22
       ],
-      "jackpot": "₱34,464,909.57",
+      "jackpot": "₱37,053,882.75",
       "winners": 0
     },
     "6/55": {
