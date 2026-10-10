@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from playwright.async_api import async_playwright
+from archive import prune_history, write_json
 
 ROOT=Path(__file__).resolve().parents[1]
 RESULTS=ROOT/'data/results.json'; HISTORY=ROOT/'data/history.json'
@@ -99,15 +100,24 @@ def merge(found):
     history=json.loads(HISTORY.read_text()) if HISTORY.exists() else {'games':{}}
     stamp=datetime.now(ZoneInfo('Asia/Manila')).isoformat(timespec='seconds')
     for gid,r in found.items():
+        previous=results.get('games',{}).get(gid)
+        if previous and r['date'] < previous['date']:
+            raise RuntimeError(f'Regressing draw date for {gid}: {r["date"]}')
+        rows=history.get('games',{}).get(gid,[])
+        existing=next((x for x in rows if x['date']==r['date']),None)
+        if existing and sorted(existing['numbers']) != sorted(r['numbers']):
+            raise RuntimeError(f'Conflicting result for {gid} on {r["date"]}')
+    for gid,r in found.items():
         results['games'][gid]={'name':GAMES[gid][0],**r}
         hist=history.setdefault('games',{}).setdefault(gid,[])
         if not any(x.get('date')==r['date'] and x.get('numbers')==r['numbers'] for x in hist):
-            hist.insert(0,{'date':r['date'],'numbers':r['numbers']})
+            hist.insert(0,{**r,'source':URL,'source_label':'Official PCSO LottoMatik'})
         hist.sort(key=lambda x:x['date'],reverse=True)
     results.update({'source':URL,'source_label':'Official PCSO LottoMatik','updated_at':stamp,'status':'live-updated'})
-    history.update({'source':'Official PCSO LottoMatik public results','updated_at':stamp})
-    RESULTS.write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n')
-    HISTORY.write_text(json.dumps(history,ensure_ascii=False,indent=2)+'\n')
+    history.update({'source':'PCSO LottoMatik and date-scoped publisher reports; see row provenance','updated_at':stamp})
+    prune_history(history)
+    write_json(RESULTS,results)
+    write_json(HISTORY,history)
 
 async def main():
     found=await collect();print(json.dumps(found,indent=2,ensure_ascii=False));validate(found);merge(found)

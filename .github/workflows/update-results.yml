@@ -4,6 +4,7 @@ on:
   schedule:
     # 10:35 PM Philippines time, after the evening draws are normally published.
     - cron: '35 14 * * *'
+    - cron: '35 18 * * *'
 permissions:
   contents: write
 jobs:
@@ -18,7 +19,14 @@ jobs:
       - run: pip install -r requirements.txt
       - run: playwright install --with-deps chromium
       - run: python scripts/update_results.py
+      - name: Recover recent missing dates and prune history
+        id: backfill
+        if: ${{ !cancelled() }}
+        run: |
+          START=$(python -c "from datetime import timedelta; import sys; sys.path.insert(0,'scripts'); from archive import today_ph; print((today_ph()-timedelta(days=7)).isoformat())")
+          python scripts/backfill_history.py --start "$START"
       - name: Commit result changes
+        if: ${{ !cancelled() && steps.backfill.outcome == 'success' }}
         run: |
           if git diff --quiet; then
             echo "No result changes."
@@ -26,6 +34,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/results.json data/history.json
+          git add data/results.json data/history.json data/coverage.json
           git commit -m "chore: update PCSO lotto results"
           git push

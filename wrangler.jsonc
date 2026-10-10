@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lotto-lens-archive",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-10-10",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://mjrb9887.github.io,http://localhost:8080,http://127.0.0.1:8080"
+  },
+  "ratelimits": [
+    {"name": "ARCHIVE_RATE_LIMITER", "namespace_id": "1001", "simple": {"limit": 10, "period": 60}}
+  ],
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}

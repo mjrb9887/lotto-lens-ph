@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="styles.css">
   <!-- After AdSense approval, paste your official AdSense <script> tag here. Do not modify Google's code. -->
   <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="config.js"></script>
+  <script defer src="archive-lookup.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -73,6 +75,21 @@
             <label>Game<select id="scanGame"></select></label>
             <label>Draw<select id="drawSelect"></select></label>
           </div>
+          <div class="archive-lookup">
+            <label for="lookupDate">Ticket draw date</label>
+            <div class="lookup-actions">
+              <input id="lookupDate" type="date" min="1995-01-01" aria-describedby="lookupHint">
+              <button id="pullDraw" class="button ghost" type="button">Find this draw</button>
+              <button id="cancelLookup" class="text-button hidden" type="button">Cancel</button>
+            </div>
+            <p id="lookupHint" class="source-note">We keep the last 12 months. Enter an older draw date to fetch its results. Confirm the draw date printed on your ticket.</p>
+            <div id="lookupStatus" class="status hidden" role="status" aria-live="polite" aria-atomic="true">
+              <span id="lookupMessage"></span>
+              <progress id="lookupProgress" class="hidden" aria-label="Fetching draw results"></progress>
+            </div>
+            <p id="lookupSource" class="source-note"></p>
+            <p class="source-note"><a href="https://www.pcso.gov.ph/SearchLottoResult.aspx" target="_blank" rel="noopener">Search the official PCSO archive</a></p>
+          </div>
           <div class="editor-head"><h3>Your play lines</h3><button id="addLine" class="text-button" type="button">+ Add line</button></div>
           <div id="ticketLines" class="ticket-lines"></div>
           <div class="check-actions">
@@ -94,6 +111,7 @@
         <p id="dataFreshness">Loading result data…</p>
       </div>
       <div id="resultsGrid" class="results-grid"></div>
+      <p id="archiveCoverage" class="source-note">Stored history covers the last 12 months. Older dates are fetched on demand.</p>
       <p class="source-note">Source link: <a href="https://lottomatik.pcso.gov.ph/lotto-results" rel="noopener" target="_blank">PCSO LottoMatik results</a>. If this site and PCSO disagree, use PCSO as the authority.</p>
     </section>
 
@@ -119,7 +137,7 @@
     <section class="section content-grid">
       <article class="content-card"><h3>What counts as a match?</h3><p>For the 6-number Lotto games supported here, the checker compares the six numbers on each play line with the six published draw numbers. Order does not matter. An apparent 3+ match is flagged for official verification; a 6/6 match is flagged as a jackpot-combination match.</p></article>
       <article class="content-card"><h3>Why we do not say “guaranteed winner”</h3><p>A ticket photo can be misread, result feeds can be delayed, and prize eligibility depends on a valid original ticket and official validation. Treat this site as a convenience layer, not a claims counter.</p></article>
-      <article class="content-card"><h3>Privacy by design</h3><p>The browser performs OCR locally. This static site has no application server receiving your ticket image. If you later add analytics or advertising, disclose those services clearly in your privacy policy.</p></article>
+      <article class="content-card"><h3>Privacy by design</h3><p>The browser performs OCR locally. Archive lookup sends only a game and draw date; your ticket image stays on your device. If you later add analytics or advertising, disclose those services clearly in your privacy policy.</p></article>
     </section>
   </main>
 
