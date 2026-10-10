@@ -39,6 +39,7 @@ function invalidateLookup() {
   $('#checkResults').replaceChildren();
   $('#checkTicket').disabled = true;
   $('#lookupSource').replaceChildren();
+  $('#manualWorkflow').classList.add('hidden');
   lookupStatus('Select “Find this draw” to load results for the entered date.');
 }
 
@@ -47,6 +48,7 @@ function resetDrawLookup() {
   lookupDraw = null;
   $('#checkResults').replaceChildren();
   $('#lookupSource').replaceChildren();
+  $('#manualWorkflow').classList.add('hidden');
   $('#lookupStatus').classList.add('hidden');
   const draw = currentDraw();
   $('#lookupDate').value = draw?.date || '';
@@ -69,6 +71,7 @@ async function pullDraw() {
   cancelLookup();
   $('#checkResults').replaceChildren();
   $('#lookupSource').replaceChildren();
+  $('#manualWorkflow').classList.add('hidden');
   $('#checkTicket').disabled = true;
   const selected = $('#lookupDate').value;
   const game = $('#scanGame').value;
@@ -93,8 +96,12 @@ async function pullDraw() {
   $('#pullDraw').disabled = true;
   $('#cancelLookup').classList.remove('hidden');
   lookupStatus(`Connecting to the archives for ${fmtDate(selected)}…`, true);
-  const timer = setTimeout(() => controller.abort('timeout'), 60000);
+  const timer = setTimeout(() => controller.abort('timeout'), window.LOTTO_ARCHIVE_MODE === 'github' ? 600000 : 60000);
   try {
+    if (window.LOTTO_ARCHIVE_MODE === 'github') {
+      await waitForGithubDraw(selected, game, controller);
+      return;
+    }
     const origin = (window.LOTTO_ARCHIVE_API || '').replace(/\/$/, '');
     const url = `${origin}/api/archive?${new URLSearchParams({date: selected, game})}`;
     const response = await fetch(url, {signal: controller.signal, cache: 'no-store'});
@@ -142,6 +149,45 @@ async function pullDraw() {
   } finally {
     clearTimeout(timer);
     if (lookupController === controller) cancelLookup();
+  }
+}
+
+async function waitForGithubDraw(selected, game, controller) {
+  $('#manualWorkflow').classList.remove('hidden');
+  $('#manualWorkflowLink').href = window.LOTTO_ARCHIVE_WORKFLOW;
+  $('#manualWorkflowDetails').textContent = `Repository owner: run “Retrieve archived draw” with date ${selected} and game ${game}. This page only checks for published results; it does not submit a request.`;
+  while (!controller.signal.aborted) {
+    const response = await fetch(`${window.LOTTO_ARCHIVE_STATUS}?check=${Date.now()}`, {
+      signal: controller.signal, cache: 'no-store'
+    });
+    let state = null;
+    if (response.ok) state = await response.json();
+    else if (response.status !== 404) throw new Error('GitHub status is unavailable. Try again or check PCSO directly.');
+    const active = state?.date === selected && state?.game === game &&
+      Number.isFinite(Date.parse(state.expires_at)) && Date.parse(state.expires_at) > Date.now();
+    if (!active) {
+      lookupStatus(`Awaiting manual retrieval for ${fmtDate(selected)} (${game}). Checking GitHub every 10 seconds…`, true);
+    } else if (state.type === 'result') {
+      if (!validRemoteDraw(state.result, selected)) throw new Error('Published results did not match this date and game. Check PCSO directly.');
+      lookupDraw = {game, result: state.result};
+      $('#drawSelect').querySelector('option[value="lookup"]')?.remove();
+      $('#drawSelect').add(new Option(`${fmtDate(selected)} — manually retrieved result`, 'lookup'));
+      $('#drawSelect').value = 'lookup';
+      $('#checkTicket').disabled = false;
+      lookupStatus(`Results ready for ${fmtDate(selected)}. Review your ticket numbers, then check.`);
+      showLookupSource(state.result);
+      return;
+    } else if (state.type === 'error' || state.type === 'not_found') {
+      throw new Error(state.message || 'No verified result was published. Check PCSO directly.');
+    } else {
+      lookupStatus(state.message || 'Retrieval in progress on GitHub…', true);
+    }
+    await new Promise((resolve, reject) => {
+      const onAbort = () => { clearTimeout(timer); reject(new DOMException('Aborted', 'AbortError')); };
+      const timer = setTimeout(() => { controller.signal.removeEventListener('abort', onAbort); resolve(); }, 10000);
+      controller.signal.addEventListener('abort', onAbort, {once:true});
+      if (controller.signal.aborted) onAbort();
+    });
   }
 }
 

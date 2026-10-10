@@ -1,0 +1,40 @@
+name: Retrieve archived draw
+run-name: Retrieve ${{ inputs.date }} (${{ inputs.game }})
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Ticket draw date (YYYY-MM-DD), e.g. 2023-01-03'
+        required: true
+        type: string
+      game:
+        description: 'Six-number game'
+        required: true
+        type: choice
+        options: ['6/42', '6/45', '6/49', '6/55', '6/58']
+permissions:
+  contents: write
+concurrency:
+  group: result-data-write
+  cancel-in-progress: false
+jobs:
+  retrieve:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Configure publication identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Retrieve and publish progress and result
+        env:
+          DRAW_DATE: ${{ inputs.date }}
+          DRAW_GAME: ${{ inputs.game }}
+        run: node scripts/retrieve_archive.mjs --commit

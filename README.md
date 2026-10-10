@@ -10,7 +10,7 @@ A mobile-first static web app for checking Philippine Lotto 6-number tickets fro
 - Match highlighting for Lotto 6/42, Mega Lotto 6/45, Super Lotto 6/49, Grand Lotto 6/55, and Ultra Lotto 6/58.
 - A rolling 12-month result history that works on GitHub Pages.
 - Scheduled GitHub Action that refreshes the five latest results, recovers recent missing days, and prunes history older than 12 months.
-- Manual date lookup with streamed progress, cancellation, source links, and a JavaScript archive API. Older results stay temporary.
+- Manual GitHub Actions date retrieval with published progress, cancellation of waiting, and source links. Older draws stay outside the rolling history.
 - Three number-generator modes: history-inspired, balanced random, and pure random. None claims to improve winning odds.
 - PWA/offline shell, privacy/methodology/responsible-play pages, and an AdSense placeholder.
 
@@ -59,34 +59,37 @@ Example row:
 
 Avoid phrases such as “AI predicts winning numbers,” “best numbers to win,” or “guaranteed winning picks.” Past draw frequency does not improve the probability of a number in a fair independent draw. The number lab is an entertainment/statistics feature.
 
-## Manual archive lookup (JavaScript)
+## Manual archive lookup on GitHub (JavaScript)
 
-The browser first checks retained history. If the requested game/date is absent, it requests `GET /api/archive?date=YYYY-MM-DD&game=6%2F42`. The JavaScript API streams newline-delimited progress messages as it searches GMA News and The Summit Express, verifies the page/card date, validates the six-number set, and returns the selected game only. Errors and missing reports never fall back to a different date.
+No Cloudflare deployment is needed. The browser checks the retained year first. For older or missing dates, it polls a public status file on GitHub every 10 seconds for up to 10 minutes. Clicking **Find this draw** does not submit a request or start a workflow. The page accurately shows awaiting manual retrieval until the repository owner runs it.
 
-Old results are held only in the active page session. They are never written to history, used in suggestions, or cached by the service worker. Only game/date are sent, not ticket images or entered numbers. Some dates may be unavailable or withheld due to publisher disagreements; the interface links to the official PCSO search.
+1. Push these changes to `main` (`git push origin main`).
+2. In GitHub open **Actions → Retrieve archived draw → Run workflow** on `main`.
+3. Enter the exact draw date, such as `2023-01-03`, and select the game, such as `6/42`.
+4. On the website select that game/date and click **Find this draw**. Leave it open while the workflow searches and publishes its status. If waiting times out, click again after the workflow finishes.
 
-Direct browser scraping is unsuitable when the publisher does not permit CORS. The API is server-side JavaScript, packaged as a small Cloudflare Worker with allowed origins, request limits, source timeouts, and bounded response sizes. No database is needed for old draws.
+The workflow uses Node.js 22 JavaScript and the repository's built-in `GITHUB_TOKEN`; no personal token, API key, Cloudflare subscription, or npm install is required. Repository Actions must permit write access, and branch rules must allow the workflow bot to push to `main`. Inputs go through environment variables and are validated before publication. Visitors without repository write access cannot initiate retrieval. Cancel stops browser waiting, not an already running workflow.
 
-### Local app and API
+One manual result is published at a time in `data/manual-archive.json`, overwritten by the next retrieval. It expires for website use after 24 hours and is cleared by daily maintenance. It is public lottery data; **previous versions remain in Git history**, so expiry is not permanent deletion from GitHub. The rolling 12-month limit applies to the active history, not repository commit history. Ticket images and entered numbers are never published.
+
+The browser reads the status directly from `raw.githubusercontent.com` because bot commits using `GITHUB_TOKEN` do not trigger branch-based Pages rebuilds. GitHub caching may delay visible progress. Source stages and final results are published; the page does not invent percentages. Errors and absent reports do not substitute another date. Manual results never enter history, suggestions, or the offline cache. Always verify important results with PCSO.
+
+If you fork the repository, update the status URL and workflow URL in `config.js`. The previous live API is retained as an optional future alternative, but GitHub mode is the default and never calls it.
+
+### Local development
 
 ```bash
 npm ci
 npm start
 ```
 
-Use Node.js 22 or newer. Open `http://localhost:8080`. Set `PORT` if that port is occupied. A plain static server works for stored history, but cannot execute the archive API.
+Open `http://localhost:8080` with Node.js 22 or newer. Local development uses the same GitHub status source by default. To retrieve a date locally without publishing or committing:
 
-### API deployment alongside GitHub Pages
+```bash
+node scripts/retrieve_archive.mjs 2023-01-03 6/42
+```
 
-The API is prepared but **not deployed** by these changes. To enable old-date lookup on the live Pages site:
-
-1. Authenticate Wrangler with your Cloudflare account.
-2. Check `ALLOWED_ORIGINS` in `wrangler.jsonc`; add your custom site origin if needed.
-3. Run `npm run check:worker`, then `npm run deploy:worker`.
-4. Put the returned HTTPS Worker origin in `config.js` as `window.LOTTO_ARCHIVE_API`.
-5. Deploy the static files through the existing GitHub Pages branch configuration.
-
-The Pages frontend and Worker can remain separate. `npm run dev:worker` tests the Worker runtime locally; set `config.js` to its local URL when testing from another origin.
+This writes only the separate temporary status file. To test that local file in the browser, set `window.LOTTO_ARCHIVE_STATUS` to `data/manual-archive.json` in `config.js`, then restore the GitHub URL before pushing.
 
 ### Validation
 
@@ -98,7 +101,7 @@ npx playwright test
 node scripts/check_archive.mjs
 ```
 
-The last command makes real publisher requests; unit and mobile UI tests use recorded snippets/mocked streams. Browser tests cover 320–430px layouts, stored dates, progress, cancellation, errors, matching, and excluding old draws from history.
+The last command makes real publisher requests; unit and mobile UI tests use recorded snippets/mocked GitHub status files. Browser tests cover 320–430px layouts, stored dates, progress, cancellation, errors, matching, and excluding old draws from history.
 
 ## Not affiliated with PCSO
 

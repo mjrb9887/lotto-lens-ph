@@ -7,7 +7,7 @@ import worker from '../worker/index.mjs';
 const root = new URL('../', import.meta.url);
 const allowed = new Set(['index.html', 'styles.css', 'app.js', 'archive-lookup.js', 'config.js',
   'sw.js', 'manifest.webmanifest', 'methodology.html', 'privacy.html', 'responsible-play.html',
-  'about.html', 'robots.txt', 'data/history.json', 'data/results.json', 'data/coverage.json']);
+  'about.html', 'robots.txt', 'data/history.json', 'data/results.json', 'data/coverage.json', 'data/manual-archive.json']);
 const types = {html: 'text/html', css: 'text/css', js: 'text/javascript', json: 'application/json', webmanifest: 'application/manifest+json'};
 const port = Number(process.env.PORT || 8080);
 createServer(async (req, res) => {

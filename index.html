@@ -82,7 +82,8 @@
               <button id="pullDraw" class="button ghost" type="button">Find this draw</button>
               <button id="cancelLookup" class="text-button hidden" type="button">Cancel</button>
             </div>
-            <p id="lookupHint" class="source-note">We keep the last 12 months. Enter an older draw date to fetch its results. Confirm the draw date printed on your ticket.</p>
+            <p id="lookupHint" class="source-note">We keep the last 12 months. Older dates need manual retrieval by the site owner. This page waits for published results. Confirm the draw date printed on your ticket.</p>
+            <p id="manualWorkflow" class="source-note hidden"><span id="manualWorkflowDetails"></span> <a id="manualWorkflowLink" target="_blank" rel="noopener">Open retrieval workflow</a></p>
             <div id="lookupStatus" class="status hidden" role="status" aria-live="polite" aria-atomic="true">
               <span id="lookupMessage"></span>
               <progress id="lookupProgress" class="hidden" aria-label="Fetching draw results"></progress>
@@ -111,7 +112,7 @@
         <p id="dataFreshness">Loading result data…</p>
       </div>
       <div id="resultsGrid" class="results-grid"></div>
-      <p id="archiveCoverage" class="source-note">Stored history covers the last 12 months. Older dates are fetched on demand.</p>
+      <p id="archiveCoverage" class="source-note">Stored history covers the last 12 months. Older dates require manual retrieval.</p>
       <p class="source-note">Source link: <a href="https://lottomatik.pcso.gov.ph/lotto-results" rel="noopener" target="_blank">PCSO LottoMatik results</a>. If this site and PCSO disagree, use PCSO as the authority.</p>
     </section>
 
