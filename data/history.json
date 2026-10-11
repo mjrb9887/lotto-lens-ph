@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-11T05:56:26+08:00",
+  "updated_at": "2026-10-12T03:08:58+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
@@ -2281,21 +2281,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-14-2025/"
-      },
-      {
-        "date": "2025-10-11",
-        "numbers": [
-          1,
-          4,
-          30,
-          9,
-          6,
-          37
-        ],
-        "jackpot": "₱19,051,981.20",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-11-2025/"
       }
     ],
     "6/45": [
@@ -4592,6 +4577,21 @@
       }
     ],
     "6/49": [
+      {
+        "date": "2026-10-11",
+        "numbers": [
+          13,
+          22,
+          40,
+          34,
+          4,
+          41
+        ],
+        "jackpot": "₱40,173,383.54",
+        "winners": 0,
+        "source": "https://lottomatik.pcso.gov.ph/lotto-results",
+        "source_label": "Official PCSO LottoMatik"
+      },
       {
         "date": "2026-10-08",
         "numbers": [
@@ -9166,24 +9166,24 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-13-2025/"
-      },
-      {
-        "date": "2025-10-11",
-        "numbers": [
-          15,
-          37,
-          17,
-          26,
-          6,
-          40
-        ],
-        "jackpot": "₱29,700,000.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-11-2025/"
       }
     ],
     "6/58": [
+      {
+        "date": "2026-10-11",
+        "numbers": [
+          37,
+          33,
+          14,
+          6,
+          35,
+          41
+        ],
+        "jackpot": "₱384,920,118.91",
+        "winners": 0,
+        "source": "https://lottomatik.pcso.gov.ph/lotto-results",
+        "source_label": "Official PCSO LottoMatik"
+      },
       {
         "date": "2026-10-09",
         "numbers": [
@@ -11480,5 +11480,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-10-11"
+  "retention_start": "2025-10-12"
 }
