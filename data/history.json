@@ -1,9 +1,24 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-15T05:53:17+08:00",
+  "updated_at": "2026-10-16T02:35:01+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
+      {
+        "date": "2026-10-15",
+        "numbers": [
+          28,
+          36,
+          11,
+          17,
+          35,
+          14
+        ],
+        "jackpot": "₱10,000,000.00",
+        "winners": 0,
+        "source": "https://lottomatik.pcso.gov.ph/lotto-results",
+        "source_label": "Official PCSO LottoMatik"
+      },
       {
         "date": "2026-10-13",
         "numbers": [
@@ -4574,24 +4589,24 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-17-2025/"
-      },
-      {
-        "date": "2025-10-15",
-        "numbers": [
-          34,
-          11,
-          8,
-          39,
-          1,
-          38
-        ],
-        "jackpot": "₱9,901,989.60",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-15-2025/"
       }
     ],
     "6/49": [
+      {
+        "date": "2026-10-15",
+        "numbers": [
+          13,
+          42,
+          11,
+          37,
+          1,
+          20
+        ],
+        "jackpot": "₱50,418,544.02",
+        "winners": 0,
+        "source": "https://lottomatik.pcso.gov.ph/lotto-results",
+        "source_label": "Official PCSO LottoMatik"
+      },
       {
         "date": "2026-10-13",
         "numbers": [
@@ -9166,21 +9181,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-18-2025/"
-      },
-      {
-        "date": "2025-10-15",
-        "numbers": [
-          22,
-          46,
-          24,
-          4,
-          23,
-          38
-        ],
-        "jackpot": "₱29,700,000.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-15-2025/"
       }
     ],
     "6/58": [
@@ -11480,5 +11480,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-10-15"
+  "retention_start": "2025-10-16"
 }
