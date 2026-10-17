@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-18T01:30:35+08:00",
+  "updated_at": "2026-10-18T04:51:08+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
