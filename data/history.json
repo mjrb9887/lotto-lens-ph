@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-21T05:48:40+08:00",
+  "updated_at": "2026-10-22T02:51:36+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
@@ -2281,21 +2281,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2025/"
-      },
-      {
-        "date": "2025-10-21",
-        "numbers": [
-          15,
-          11,
-          33,
-          30,
-          7,
-          21
-        ],
-        "jackpot": "₱34,864,065.20",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-21-2025/"
       }
     ],
     "6/45": [
@@ -6884,21 +6869,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2025/"
-      },
-      {
-        "date": "2025-10-21",
-        "numbers": [
-          31,
-          4,
-          36,
-          27,
-          2,
-          39
-        ],
-        "jackpot": "₱119,716,186.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-21-2025/"
       }
     ],
     "6/55": [
@@ -11476,24 +11446,9 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-24-2025/"
-      },
-      {
-        "date": "2025-10-21",
-        "numbers": [
-          34,
-          29,
-          4,
-          17,
-          15,
-          32
-        ],
-        "jackpot": "₱49,500,000.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-21-2025/"
       }
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-10-21"
+  "retention_start": "2025-10-22"
 }
