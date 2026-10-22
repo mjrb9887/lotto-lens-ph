@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-22T05:54:23+08:00",
+  "updated_at": "2026-10-23T02:45:27+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
@@ -4574,21 +4574,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-24-2025/"
-      },
-      {
-        "date": "2025-10-22",
-        "numbers": [
-          5,
-          25,
-          10,
-          4,
-          8,
-          42
-        ],
-        "jackpot": "₱20,724,724.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-22-2025/"
       }
     ],
     "6/49": [
@@ -9166,21 +9151,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-25-2025/"
-      },
-      {
-        "date": "2025-10-22",
-        "numbers": [
-          44,
-          22,
-          2,
-          42,
-          26,
-          39
-        ],
-        "jackpot": "₱29,700,000.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-22-2025/"
       }
     ],
     "6/58": [
@@ -11480,5 +11450,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-10-22"
+  "retention_start": "2025-10-23"
 }
