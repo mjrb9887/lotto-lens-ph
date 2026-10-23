@@ -1,9 +1,24 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-10-23T05:51:33+08:00",
+  "updated_at": "2026-10-24T02:39:56+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
+      {
+        "date": "2026-10-22",
+        "numbers": [
+          22,
+          42,
+          37,
+          21,
+          8,
+          17
+        ],
+        "jackpot": "₱12,220,586.00",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-october-22-2026/"
+      },
       {
         "date": "2026-10-20",
         "numbers": [
@@ -2266,24 +2281,24 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-25-2025/"
-      },
-      {
-        "date": "2025-10-23",
-        "numbers": [
-          12,
-          23,
-          24,
-          29,
-          20,
-          26
-        ],
-        "jackpot": "₱39,093,928.40",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2025/"
       }
     ],
     "6/45": [
+      {
+        "date": "2026-10-23",
+        "numbers": [
+          1,
+          2,
+          25,
+          7,
+          19,
+          3
+        ],
+        "jackpot": "₱15,000,000.00",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2026/"
+      },
       {
         "date": "2026-10-21",
         "numbers": [
@@ -4578,6 +4593,21 @@
     ],
     "6/49": [
       {
+        "date": "2026-10-22",
+        "numbers": [
+          3,
+          16,
+          11,
+          35,
+          4,
+          30
+        ],
+        "jackpot": "₱62,468,236.56",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-october-22-2026/"
+      },
+      {
         "date": "2026-10-20",
         "numbers": [
           48,
@@ -6854,21 +6884,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-october-26-2025/"
-      },
-      {
-        "date": "2025-10-23",
-        "numbers": [
-          25,
-          14,
-          26,
-          40,
-          4,
-          22
-        ],
-        "jackpot": "₱127,118,438.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2025/"
       }
     ],
     "6/55": [
@@ -9154,6 +9169,21 @@
       }
     ],
     "6/58": [
+      {
+        "date": "2026-10-23",
+        "numbers": [
+          14,
+          38,
+          44,
+          25,
+          52,
+          47
+        ],
+        "jackpot": "₱430,857,884.28",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-october-23-2026/"
+      },
       {
         "date": "2026-10-20",
         "numbers": [
@@ -11450,5 +11480,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-10-23"
+  "retention_start": "2025-10-24"
 }
