@@ -21,13 +21,6 @@
         "6/55"
       ]
     },
-    "2025-10-24": {
-      "status": "retrieved",
-      "games": [
-        "6/45",
-        "6/58"
-      ]
-    },
     "2025-10-25": {
       "status": "retrieved",
       "games": [
@@ -2610,9 +2603,16 @@
         "6/45",
         "6/58"
       ]
+    },
+    "2026-10-24": {
+      "status": "retrieved",
+      "games": [
+        "6/42",
+        "6/55"
+      ]
     }
   },
-  "updated_at": "2026-10-24T05:35:30+08:00",
-  "retention_start": "2025-10-24",
+  "updated_at": "2026-10-25T01:33:06+08:00",
+  "retention_start": "2025-10-25",
   "note": "Retrieved means a date-scoped report was parsed; it does not guarantee every scheduled game is present."
 }
