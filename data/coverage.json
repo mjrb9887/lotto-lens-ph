@@ -2612,7 +2612,7 @@
       ]
     }
   },
-  "updated_at": "2026-11-06T05:11:27+08:00",
+  "updated_at": "2026-11-06T07:46:41+08:00",
   "retention_start": "2025-11-06",
   "note": "Retrieved means a date-scoped report was parsed; it does not guarantee every scheduled game is present."
 }
