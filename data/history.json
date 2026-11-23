@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-11-22T07:31:44+08:00",
+  "updated_at": "2026-11-23T07:44:38+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
@@ -2281,21 +2281,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-25-2025/"
-      },
-      {
-        "date": "2025-11-22",
-        "numbers": [
-          10,
-          30,
-          12,
-          15,
-          33,
-          20
-        ],
-        "jackpot": "₱9,211,206.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-22-2025/"
       }
     ],
     "6/45": [
@@ -4592,6 +4577,21 @@
       }
     ],
     "6/49": [
+      {
+        "date": "2026-11-22",
+        "numbers": [
+          12,
+          38,
+          29,
+          25,
+          44,
+          39
+        ],
+        "jackpot": "₱126,805,240.84",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-22-2026/"
+      },
       {
         "date": "2026-11-19",
         "numbers": [
@@ -9166,24 +9166,24 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-24-2025/"
-      },
-      {
-        "date": "2025-11-22",
-        "numbers": [
-          3,
-          40,
-          11,
-          53,
-          39,
-          26
-        ],
-        "jackpot": "₱140,522,916.60",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-22-2025/"
       }
     ],
     "6/58": [
+      {
+        "date": "2026-11-22",
+        "numbers": [
+          5,
+          51,
+          44,
+          55,
+          32,
+          21
+        ],
+        "jackpot": "₱575,944,129.09",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-22-2026/"
+      },
       {
         "date": "2026-11-20",
         "numbers": [
@@ -11480,5 +11480,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-11-22"
+  "retention_start": "2025-11-23"
 }
