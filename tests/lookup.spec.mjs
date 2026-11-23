@@ -1,7 +1,10 @@
 import {test, expect} from '@playwright/test';
 
+const historyURL = 'https://raw.githubusercontent.com/mjrb9887/lotto-lens-ph/main/data/history.json';
+
 test.beforeEach(async ({page}) => {
   await page.route('https://cdn.jsdelivr.net/**', route => route.abort());
+  await page.route(historyURL, route => route.abort());
   await page.goto('/');
   await expect(page.locator('.result-card')).toHaveCount(5);
 });
@@ -94,4 +97,20 @@ test('wrong-game and expired publications keep waiting without checking a ticket
   await page.clock.fastForward(10000);
   await expect(page.locator('#checkTicket')).toBeDisabled();
   await expect(page.locator('#lookupMessage')).toContainText('Awaiting manual retrieval');
+});
+
+
+test('latest cards and ticket dates use newer draws from live rolling history', async ({page, request}) => {
+  const bundled = await (await request.get('/data/history.json')).json();
+  const drawDate = await page.evaluate(() => manilaToday());
+  bundled.updated_at = new Date(Date.parse(bundled.updated_at) + 1000).toISOString();
+  bundled.games['6/42'].unshift({
+    date: drawDate, numbers: [1, 2, 3, 4, 5, 6], jackpot: '₱10,000,000', winners: 0
+  });
+  await page.route(historyURL, route => route.fulfill({json: bundled}));
+  await page.reload();
+  const displayDate = await page.evaluate(date => fmtDate(date), drawDate);
+  await expect(page.locator('.result-card').first()).toContainText(displayDate);
+  await page.selectOption('#scanGame', '6/42');
+  await expect(page.locator('#drawSelect option:checked')).toContainText(displayDate);
 });

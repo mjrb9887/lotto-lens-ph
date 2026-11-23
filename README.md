@@ -74,7 +74,9 @@ One manual result is published at a time in `data/manual-archive.json`, overwrit
 
 The browser reads the status directly from `raw.githubusercontent.com` because bot commits using `GITHUB_TOKEN` do not trigger branch-based Pages rebuilds. GitHub caching may delay visible progress. Source stages and final results are published; the page does not invent percentages. Errors and absent reports do not substitute another date. Manual results never enter history, suggestions, or the offline cache. Always verify important results with PCSO.
 
-If you fork the repository, update the status URL and workflow URL in `config.js`. The previous live API is retained as an optional future alternative, but GitHub mode is the default and never calls it.
+The browser also reads rolling history directly from GitHub and falls back to the deployed copy when GitHub is unavailable. The latest cards use the most recent available draw for each game, including date-scoped reports recovered by the scheduled backfill.
+
+If you fork the repository, update the history, status, and workflow URLs in `config.js`. The previous live API is retained as an optional future alternative, but GitHub mode is the default and never calls it.
 
 ### Local development
 

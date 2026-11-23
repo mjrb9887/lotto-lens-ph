@@ -28,10 +28,22 @@ jobs:
         run: |
           START=$(python -c "from datetime import timedelta; import sys; sys.path.insert(0,'scripts'); from archive import today_ph; print((today_ph()-timedelta(days=7)).isoformat())")
           python scripts/backfill_history.py --start "$START"
-      - name: Clear temporary archive publication
+      - name: Clear expired archive publication
         if: ${{ !cancelled() }}
         run: |
-          python -c "import json; from pathlib import Path; p=Path('data/manual-archive.json'); p.write_text(json.dumps({'type':'idle'})+'\n')"
+          python - <<'PYCODE'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          path = Path('data/manual-archive.json')
+          publication = json.loads(path.read_text())
+          expires = publication.get('expires_at')
+          if publication.get('type') != 'idle' and (
+              not expires or datetime.fromisoformat(expires) <= datetime.now(timezone.utc)
+          ):
+              path.write_text('{"type":"idle"}\n')
+          PYCODE
       - name: Commit result changes
         if: ${{ !cancelled() && steps.backfill.outcome == 'success' }}
         run: |

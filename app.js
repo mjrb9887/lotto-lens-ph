@@ -4,10 +4,77 @@ const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s
 function fmtDate(iso){if(!iso)return"Unknown date";const d=new Date(iso+"T00:00:00+08:00");return new Intl.DateTimeFormat("en-PH",{year:"numeric",month:"short",day:"numeric",timeZone:"Asia/Manila"}).format(d)}
 function ball(n,match=false){return `<span class="ball${match?' match':''}">${String(n).padStart(2,'0')}</span>`}
 function fillGameSelect(el){el.innerHTML=Object.entries(GAMES).map(([id,g])=>`<option value="${id}">${g.name}</option>`).join("")}
-async function loadData(){try{const [r,h]=await Promise.all([fetch('data/results.json',{cache:'no-store'}),fetch('data/history.json',{cache:'no-store'})]);if(!r.ok||!h.ok)throw new Error('Data request failed');resultsData=await r.json();historyData=await h.json();renderResults();syncDrawOptions();updateHistoryCount()}catch(e){console.error(e);$('#dataFreshness').textContent='Result data could not be loaded. Use the official PCSO source link below.'}}
-function renderResults(){const grid=$('#resultsGrid');grid.innerHTML=Object.entries(GAMES).map(([id,g])=>{const r=resultsData.games[id];if(!r)return'';return `<article class="result-card"><div class="game">${g.name}</div><div class="date">${fmtDate(r.date)}</div><div class="balls">${r.numbers.map(n=>ball(n)).join('')}</div><div class="jackpot">${r.jackpot||'Jackpot not stored'}</div><div class="winners">${Number.isFinite(r.winners)?`${r.winners} jackpot winner${r.winners===1?'':'s'}`:'Winner count unavailable'}</div></article>`}).join('');const updated=resultsData.updated_at?new Date(resultsData.updated_at).toLocaleString('en-PH',{timeZone:'Asia/Manila',dateStyle:'medium',timeStyle:'short'}):'unknown';$('#dataFreshness').textContent=`Local result file updated ${updated}. Always verify against PCSO.`}
-function allDraws(game){const today=manilaToday(),cutoff=new Date(today+'T00:00:00Z');const day=cutoff.getUTCDate();cutoff.setUTCFullYear(cutoff.getUTCFullYear()-1);if(cutoff.getUTCDate()!==day)cutoff.setUTCDate(0);const start=cutoff.toISOString().slice(0,10);const list=[...(historyData?.games?.[game]||[])].filter(d=>d.date>=start&&d.date<=today);const latest=resultsData?.games?.[game];if(latest&&latest.date>=start&&latest.date<=today&&!list.some(x=>x.date===latest.date&&x.numbers.join()==latest.numbers.join()))list.unshift({date:latest.date,numbers:latest.numbers,jackpot:latest.jackpot,winners:latest.winners,source:resultsData.source,source_label:resultsData.source_label});return list.sort((a,b)=>b.date.localeCompare(a.date))}
-function syncDrawOptions(){if(!resultsData||!historyData)return;const game=$('#scanGame').value;const draws=allDraws(game);$('#drawSelect').innerHTML=draws.map((d,i)=>`<option value="${i}">${fmtDate(d.date)} — ${d.numbers.map(n=>String(n).padStart(2,'0')).join(' ')}</option>`).join('');resetDrawLookup()}
+async function loadJSON(url, options) {
+  const response = await fetch(url, {cache:'no-store', ...options});
+  if (!response.ok) throw new Error('Result data request failed');
+  const data = await response.json();
+  if (!data?.games) throw new Error('Invalid result data');
+  return data;
+}
+async function loadData() {
+  try {
+    const bundledHistory = loadJSON('data/history.json');
+    const liveHistory = window.LOTTO_HISTORY_URL
+      ? loadJSON(window.LOTTO_HISTORY_URL, {signal:AbortSignal.timeout(3000)})
+      : Promise.resolve(null);
+    const [results, bundled, live] = await Promise.allSettled([
+      loadJSON('data/results.json'), bundledHistory, liveHistory
+    ]);
+    resultsData = results.value;
+    historyData = [live.value, bundled.value].filter(Boolean)
+      .sort((a, b) => (Date.parse(b.updated_at) || 0) - (Date.parse(a.updated_at) || 0))[0];
+    if (!resultsData && !historyData) throw new Error('Result data could not be loaded');
+    renderResults();
+    syncDrawOptions();
+    updateHistoryCount();
+  } catch (error) {
+    console.error(error);
+    $('#dataFreshness').textContent='Result data could not be loaded. Use the official PCSO source link below.';
+  }
+}
+function renderResults() {
+  $('#resultsGrid').innerHTML = Object.entries(GAMES).map(([id, game]) => {
+    const draw = allDraws(id)[0];
+    if (!draw) return '';
+    const winners = Number.isFinite(draw.winners)
+      ? `${draw.winners} jackpot winner${draw.winners === 1 ? '' : 's'}`
+      : 'Winner count unavailable';
+    return `<article class="result-card"><div class="game">${game.name}</div><div class="date">${fmtDate(draw.date)}</div><div class="balls">${draw.numbers.map(n=>ball(n)).join('')}</div><div class="jackpot">${draw.jackpot||'Jackpot not stored'}</div><div class="winners">${winners}</div></article>`;
+  }).join('');
+  const updated = [historyData?.updated_at, resultsData?.updated_at].filter(Boolean).sort().at(-1);
+  const timestamp = updated ? new Date(updated).toLocaleString('en-PH', {timeZone:'Asia/Manila', dateStyle:'medium', timeStyle:'short'}) : 'unknown';
+  $('#dataFreshness').textContent = `Result data updated ${timestamp}. Always verify against PCSO.`;
+}
+function allDraws(game) {
+  const today = manilaToday();
+  const cutoff = new Date(today + 'T00:00:00Z');
+  const day = cutoff.getUTCDate();
+  cutoff.setUTCFullYear(cutoff.getUTCFullYear() - 1);
+  if (cutoff.getUTCDate() !== day) cutoff.setUTCDate(0);
+  const start = cutoff.toISOString().slice(0, 10);
+  const byDate = new Map();
+  for (const draw of historyData?.games?.[game] || []) {
+    if (draw.date >= start && draw.date <= today) byDate.set(draw.date, draw);
+  }
+  const official = resultsData?.games?.[game];
+  if (official && official.date >= start && official.date <= today) {
+    const reported = byDate.get(official.date);
+    if (!reported || [...reported.numbers].sort().join() === [...official.numbers].sort().join()) {
+      byDate.set(official.date, {
+        ...reported,
+        ...official,
+        jackpot: official.jackpot ?? reported?.jackpot,
+        winners: official.winners ?? reported?.winners,
+        source: resultsData.source,
+        source_label: resultsData.source_label
+      });
+    } else {
+      byDate.delete(official.date);
+    }
+  }
+  return [...byDate.values()].sort((a,b)=>b.date.localeCompare(a.date));
+}
+function syncDrawOptions(){if(!resultsData&&!historyData)return;const game=$('#scanGame').value;const draws=allDraws(game);$('#drawSelect').innerHTML=draws.map((d,i)=>`<option value="${i}">${fmtDate(d.date)} — ${d.numbers.map(n=>String(n).padStart(2,'0')).join(' ')}</option>`).join('');resetDrawLookup()}
 function addPlayLine(values=[]){lineCounter++;const max=GAMES[$('#scanGame').value]?.max||58;const wrap=document.createElement('div');wrap.className='play-line';wrap.innerHTML=`<span class="line-no">${lineCounter}</span><div class="number-inputs">${Array.from({length:6},(_,i)=>`<input inputmode="numeric" aria-label="Number ${i+1}" min="1" max="${max}" maxlength="2" value="${values[i]??''}">`).join('')}</div><button class="remove-line" type="button" aria-label="Remove line">×</button>`;wrap.querySelector('.remove-line').addEventListener('click',()=>{wrap.remove();renumberLines()});$('#ticketLines').appendChild(wrap)}
 function renumberLines(){lineCounter=0;$$('.play-line').forEach(row=>{lineCounter++;row.querySelector('.line-no').textContent=lineCounter})}
 function clearLines(){lineCounter=0;$('#ticketLines').innerHTML=''}
