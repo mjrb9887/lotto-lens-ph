@@ -1,4 +1,4 @@
-const CACHE = 'lottolens-v4';
+const CACHE = 'lottolens-v5';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'archive-lookup.js', 'config.js',
   'methodology.html', 'privacy.html', 'responsible-play.html', 'about.html',
   'data/results.json', 'data/history.json', 'data/coverage.json'];

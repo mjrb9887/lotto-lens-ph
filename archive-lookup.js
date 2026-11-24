@@ -166,7 +166,7 @@ async function waitForGithubDraw(selected, game, controller) {
     const active = state?.date === selected && state?.game === game &&
       Number.isFinite(Date.parse(state.expires_at)) && Date.parse(state.expires_at) > Date.now();
     if (!active) {
-      lookupStatus(`Awaiting manual retrieval for ${fmtDate(selected)} (${game}). Checking GitHub every 10 seconds…`, true);
+      lookupStatus(`Awaiting manual retrieval for ${fmtDate(selected)} (${game}). The site owner must start the workflow. You can also search PCSO directly.`, true);
     } else if (state.type === 'result') {
       if (!validRemoteDraw(state.result, selected)) throw new Error('Published results did not match this date and game. Check PCSO directly.');
       lookupDraw = {game, result: state.result};
@@ -184,7 +184,7 @@ async function waitForGithubDraw(selected, game, controller) {
     }
     await new Promise((resolve, reject) => {
       const onAbort = () => { clearTimeout(timer); reject(new DOMException('Aborted', 'AbortError')); };
-      const timer = setTimeout(() => { controller.signal.removeEventListener('abort', onAbort); resolve(); }, 10000);
+      const timer = setTimeout(() => { controller.signal.removeEventListener('abort', onAbort); resolve(); }, active ? 3000 : 10000);
       controller.signal.addEventListener('abort', onAbort, {once:true});
       if (controller.signal.aborted) onAbort();
     });

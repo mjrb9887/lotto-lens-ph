@@ -80,10 +80,117 @@ function renumberLines(){lineCounter=0;$$('.play-line').forEach(row=>{lineCounte
 function clearLines(){lineCounter=0;$('#ticketLines').innerHTML=''}
 function readLines(){const max=GAMES[$('#scanGame').value].max;return $$('.play-line').map((row,idx)=>{const nums=[...row.querySelectorAll('input')].map(i=>Number(i.value));const valid=nums.length===6&&nums.every(n=>Number.isInteger(n)&&n>=1&&n<=max)&&new Set(nums).size===6;return{index:idx+1,nums,valid}})}
 function checkTicket(){if($('#checkTicket').disabled)return;const game=$('#scanGame').value,draw=currentDraw(),lines=readLines(),out=$('#checkResults');if(!draw){out.innerHTML='<div class="status error">No draw data is available for this game.</div>';return}if(!lines.length){out.innerHTML='<div class="status error">Add at least one play line.</div>';return}out.innerHTML=lines.map(line=>{if(!line.valid)return `<div class="check-card"><div class="check-title"><strong>Line ${line.index}</strong><span>Needs correction</span></div><div class="result-message">Enter six different numbers from 1 to ${GAMES[game].max}.</div></div>`;const hits=line.nums.filter(n=>draw.numbers.includes(n));let msg=hits.length>=6?'6/6 jackpot-combination match — preserve the original ticket and verify immediately with PCSO.':hits.length>=3?`${hits.length}/6 match — potentially prize-eligible; verify the original ticket with PCSO or an authorized outlet.`:`${hits.length}/6 match — no 3+ number match on this line.`;return `<div class="check-card ${hits.length>=3?'win':''}"><div class="check-title"><strong>Line ${line.index}</strong><span>${hits.length}/6 matched · ${fmtDate(draw.date)} · ${game}</span></div><div class="balls">${line.nums.map(n=>ball(n,hits.includes(n))).join('')}</div><div class="result-message">${msg}</div></div>`}).join('')}
-function detectGame(text){const u=text.toUpperCase().replace(/\s+/g,' ');for(const [id,g] of Object.entries(GAMES)){if(g.aliases.some(a=>u.includes(a)))return id}return null}
-function normalizeOcrLine(line){return line.replace(/[Oo]/g,'0').replace(/(?<=\s)[Il|](?=\s|$)/g,'1')}
-function extractPlayLines(text,game){const max=GAMES[game].max;const rows=[];for(const raw of text.split(/\n+/)){const line=normalizeOcrLine(raw);const nums=(line.match(/\b\d{1,2}\b/g)||[]).map(Number).filter(n=>n>=1&&n<=max);if(nums.length===6&&new Set(nums).size===6)rows.push(nums)}if(rows.length)return rows.slice(0,12);const nums=(normalizeOcrLine(text).match(/\b\d{1,2}\b/g)||[]).map(Number).filter(n=>n>=1&&n<=max);for(let i=0;i+5<nums.length&&rows.length<8;i++){const chunk=nums.slice(i,i+6);if(new Set(chunk).size===6){rows.push(chunk);i+=5}}return rows}
-async function scanPhoto(file){const status=$('#ocrStatus'),preview=$('#preview');preview.src=URL.createObjectURL(file);preview.classList.remove('hidden');status.classList.remove('hidden','error');status.textContent='Preparing OCR…';if(!window.Tesseract){status.classList.add('error');status.textContent='OCR library did not load. You can still enter the six numbers manually.';return}try{const result=await Tesseract.recognize(file,'eng',{logger:m=>{if(m.status==='recognizing text')status.textContent=`Reading ticket… ${Math.round((m.progress||0)*100)}%`;else status.textContent=m.status.replace(/_/g,' ')}});const text=result.data.text||'';$('#rawOcr').textContent=text;$('#rawOcrWrap').classList.remove('hidden');const detected=detectGame(text);if(detected){$('#scanGame').value=detected;syncDrawOptions()}const game=$('#scanGame').value;const lines=extractPlayLines(text,game);if(lines.length){clearLines();lines.forEach(addPlayLine);status.textContent=`Found ${lines.length} possible play line${lines.length===1?'':'s'}. Review every number before checking.`}else{status.classList.add('error');status.textContent='I could not confidently find a six-number play line. Try a clearer photo or enter the numbers manually.'}}catch(e){console.error(e);status.classList.add('error');status.textContent='OCR failed on this image. You can still enter the numbers manually.'}}
+function detectGame(text) {
+  const normalized = text.toUpperCase().replace(/\s*\/\s*/g, '/').replace(/\s+/g, ' ');
+  for (const [id, game] of Object.entries(GAMES)) {
+    if (game.aliases.some(alias => new RegExp('\\b' + alias + '\\b').test(normalized))) return id;
+  }
+  return null;
+}
+function extractPlayLines(text, game) {
+  const max = GAMES[game].max;
+  const rows = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim()
+      .replace(/^(?:[A-Z]\s*[.):]\s*|[A-H]\s+)/i, '')
+      .replace(/^\d{1,2}\s*[.):]\s+/, '')
+      .replace(/\s+(?:LP|QP|LUCKY PICK)$/i, '');
+    const tokens = line.split(/[\s,\-–—]+/);
+    if (tokens.length !== 6 || !tokens.every(token => /^[0-9OoIiLl|]{1,2}$/.test(token))) continue;
+    const numbers = tokens.map(token => Number(token.replace(/[Oo]/g, '0').replace(/[IiLl|]/g, '1')));
+    if (numbers.every(number => number >= 1 && number <= max) && new Set(numbers).size === 6) {
+      rows.push(numbers);
+    }
+    if (rows.length === 12) break;
+  }
+  return rows;
+}
+function prepareTicketImage(image) {
+  const canvas = document.createElement('canvas');
+  const scale = Math.min(2, 2000 / Math.max(image.naturalWidth, image.naturalHeight));
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const ctx = canvas.getContext('2d', {willReadFrequently:true});
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    const gray = 0.299 * pixels.data[i] + 0.587 * pixels.data[i + 1] + 0.114 * pixels.data[i + 2];
+    pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = (gray - 128) * 1.4 + 128;
+  }
+  ctx.putImageData(pixels, 0, 0);
+  return canvas;
+}
+async function scanPhoto(file) {
+  const status = $('#ocrStatus');
+  const preview = $('#preview');
+  const previousURL = preview.getAttribute('src');
+  const photoURL = URL.createObjectURL(file);
+  preview.src = photoURL;
+  if (previousURL) URL.revokeObjectURL(previousURL);
+  const isCurrent = () => preview.getAttribute('src') === photoURL;
+  preview.classList.remove('hidden');
+  status.classList.remove('hidden', 'error');
+  $('#rawOcrWrap').classList.add('hidden');
+  status.textContent = 'Preparing OCR…';
+  if (!window.Tesseract) {
+    status.classList.add('error');
+    status.textContent = 'OCR library did not load. Enter the six numbers manually.';
+    return;
+  }
+  let worker;
+  try {
+    await preview.decode();
+    if (!isCurrent()) return;
+    const image = prepareTicketImage(preview);
+    worker = await Tesseract.createWorker('eng', 1, {logger: message => {
+      if (!isCurrent()) return;
+      status.textContent = message.status === 'recognizing text'
+        ? `Reading ticket… ${Math.round((message.progress || 0) * 100)}%`
+        : message.status.replace(/_/g, ' ');
+    }});
+    if (!isCurrent()) return;
+    const gameInput = $('#scanGame');
+    let {data: {text}} = await worker.recognize(image);
+    if (!isCurrent()) return;
+    let detected = detectGame(text);
+    let lines = extractPlayLines(text, detected || gameInput.value);
+    if (!lines.length) {
+      await worker.setParameters({tessedit_pageseg_mode:'11'});
+      const retry = await worker.recognize(image);
+      if (!isCurrent()) return;
+      const retryGame = detectGame(retry.data.text) || detected;
+      const retryLines = extractPlayLines(retry.data.text, retryGame || gameInput.value);
+      if (retryLines.length) {
+        text = retry.data.text;
+        detected = retryGame;
+        lines = retryLines;
+      }
+    }
+    $('#rawOcr').textContent = text;
+    $('#rawOcrWrap').classList.remove('hidden');
+    if (!lines.length) {
+      status.classList.add('error');
+      status.textContent = 'No complete play line was read. Retake the photo with the ticket flat and all number rows in frame, or enter the numbers manually.';
+      return;
+    }
+    if (detected && detected !== gameInput.value) {
+      gameInput.value = detected;
+      syncDrawOptions();
+    }
+    clearLines();
+    lines.forEach(addPlayLine);
+    status.textContent = `Read ${lines.length} possible play line${lines.length === 1 ? '' : 's'}. Compare every number and line with your ticket, then confirm the draw date.`;
+  } catch (error) {
+    if (!isCurrent()) return;
+    console.error(error);
+    status.classList.add('error');
+    status.textContent = 'OCR failed on this image. You can still enter the numbers manually.';
+  } finally {
+    await worker?.terminate().catch(error => console.error(error));
+  }
+}
 function cryptoRandom(){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296}
 function weightedPick(items,weights){let total=weights.reduce((a,b)=>a+b,0),r=cryptoRandom()*total;for(let i=0;i<items.length;i++){r-=weights[i];if(r<=0)return i}return items.length-1}
 function historySuggested(game){const max=GAMES[game].max,draws=allDraws(game),freq=Array(max+1).fill(0);draws.forEach(d=>d.numbers.forEach(n=>freq[n]++));const pool=Array.from({length:max},(_,i)=>i+1),picked=[];while(picked.length<6){const weights=pool.map(n=>1+0.18*(draws.length?freq[n]/Math.max(1,draws.length)*6:0));const idx=weightedPick(pool,weights);picked.push(pool[idx]);pool.splice(idx,1)}return picked.sort((a,b)=>a-b)}
