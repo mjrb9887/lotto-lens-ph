@@ -1,6 +1,6 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-11-26T09:54:28+08:00",
+  "updated_at": "2026-11-27T07:13:32+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
@@ -4559,21 +4559,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-28-2025/"
-      },
-      {
-        "date": "2025-11-26",
-        "numbers": [
-          29,
-          22,
-          25,
-          37,
-          41,
-          34
-        ],
-        "jackpot": "₱84,182,510.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-26-2025/"
       }
     ],
     "6/49": [
@@ -9136,21 +9121,6 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-29-2025/"
-      },
-      {
-        "date": "2025-11-26",
-        "numbers": [
-          24,
-          42,
-          33,
-          19,
-          6,
-          20
-        ],
-        "jackpot": "₱152,234,211.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-26-2025/"
       }
     ],
     "6/58": [
@@ -11450,5 +11420,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-11-26"
+  "retention_start": "2025-11-27"
 }
