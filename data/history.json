@@ -1,9 +1,24 @@
 {
   "source": "PCSO LottoMatik and date-scoped publisher reports; see row provenance",
-  "updated_at": "2026-11-27T09:52:20+08:00",
+  "updated_at": "2026-11-28T06:53:17+08:00",
   "note": "Rolling 12-month history. Older draws are fetched on demand and are not stored in this file.",
   "games": {
     "6/42": [
+      {
+        "date": "2026-11-26",
+        "numbers": [
+          5,
+          9,
+          17,
+          20,
+          39,
+          1
+        ],
+        "jackpot": "₱10,092,684.88",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-26-2026/"
+      },
       {
         "date": "2026-11-24",
         "numbers": [
@@ -2266,24 +2281,39 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-29-2025/"
-      },
-      {
-        "date": "2025-11-27",
-        "numbers": [
-          42,
-          26,
-          4,
-          30,
-          21,
-          22
-        ],
-        "jackpot": "₱15,608,485.00",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-27-2025/"
       }
     ],
     "6/45": [
+      {
+        "date": "2026-11-27",
+        "numbers": [
+          33,
+          37,
+          36,
+          26,
+          23,
+          3
+        ],
+        "jackpot": "₱44,198,060.38",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-27-2026/"
+      },
+      {
+        "date": "2026-11-25",
+        "numbers": [
+          35,
+          32,
+          12,
+          37,
+          16,
+          41
+        ],
+        "jackpot": "₱39,508,860.78",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-25-2026/"
+      },
       {
         "date": "2026-11-23",
         "numbers": [
@@ -4563,6 +4593,21 @@
     ],
     "6/49": [
       {
+        "date": "2026-11-26",
+        "numbers": [
+          4,
+          41,
+          12,
+          14,
+          7,
+          39
+        ],
+        "jackpot": "₱139,605,888.22",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-26-2026/"
+      },
+      {
         "date": "2026-11-24",
         "numbers": [
           36,
@@ -6839,24 +6884,24 @@
         "winners": null,
         "source_label": "GMA News Online",
         "source": "https://www.gmanetwork.com/news/lotto/results-november-30-2025/"
-      },
-      {
-        "date": "2025-11-27",
-        "numbers": [
-          3,
-          16,
-          7,
-          35,
-          42,
-          38
-        ],
-        "jackpot": "₱23,948,578.80",
-        "winners": null,
-        "source_label": "GMA News Online",
-        "source": "https://www.gmanetwork.com/news/lotto/results-november-27-2025/"
       }
     ],
     "6/55": [
+      {
+        "date": "2026-11-25",
+        "numbers": [
+          36,
+          30,
+          15,
+          17,
+          24,
+          42
+        ],
+        "jackpot": "₱45,084,438.55",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-25-2026/"
+      },
       {
         "date": "2026-11-23",
         "numbers": [
@@ -9124,6 +9169,21 @@
       }
     ],
     "6/58": [
+      {
+        "date": "2026-11-27",
+        "numbers": [
+          18,
+          13,
+          6,
+          7,
+          5,
+          45
+        ],
+        "jackpot": "₱603,583,822.68",
+        "winners": null,
+        "source_label": "GMA News Online",
+        "source": "https://www.gmanetwork.com/news/lotto/results-november-27-2026/"
+      },
       {
         "date": "2026-11-24",
         "numbers": [
@@ -11420,5 +11480,5 @@
     ]
   },
   "retention_months": 12,
-  "retention_start": "2025-11-27"
+  "retention_start": "2025-11-28"
 }
